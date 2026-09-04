@@ -19,8 +19,18 @@ export default function LoginScreen({ navigation }: any) {
 
   async function handleLogin() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setMessage(error.message);
-    else navigation.replace('Home');
+    if (error) { setMessage(error.message); return; }
+
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData.user?.id;
+    const { data: profile } = await supabase.from('profiles').select('username').eq('id', userId).single();
+
+    const needsSetup = !profile?.username || profile.username === userData.user?.email?.split('@')[0];
+    if (needsSetup) {
+      navigation.replace('CreateProfile');
+    } else {
+      navigation.replace('Home', { screen: 'Me' });
+    }
   }
 
   return (

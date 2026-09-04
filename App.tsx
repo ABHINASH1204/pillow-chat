@@ -6,6 +6,7 @@ import { PlusJakartaSans_500Medium, PlusJakartaSans_700Bold } from '@expo-google
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import SignUpScreen from './screens/SignUpScreen';
+import CreateProfileScreen from './screens/CreateProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={MainTabs} />
+        <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

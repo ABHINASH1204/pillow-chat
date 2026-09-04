@@ -14,12 +14,22 @@ export default function RequestsScreen() {
     setUserId(me);
     if (!me) return;
 
-    const { data } = await supabase
+    const { data: reqs } = await supabase
       .from('friend_requests')
-      .select('id, requester_id, profiles!friend_requests_requester_id_fkey(display_name, username)')
+      .select('id, requester_id')
       .eq('addressee_id', me)
       .eq('status', 'pending');
-    if (data) setRequests(data);
+
+    if (!reqs || reqs.length === 0) { setRequests([]); return; }
+
+    const requesterIds = reqs.map((r) => r.requester_id);
+    const { data: profiles } = await supabase.from('profiles').select('id, display_name, username').in('id', requesterIds);
+
+    const merged = reqs.map((r) => ({
+      ...r,
+      profile: profiles?.find((p) => p.id === r.requester_id),
+    }));
+    setRequests(merged);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -45,7 +55,7 @@ export default function RequestsScreen() {
         ListEmptyComponent={<Text style={styles.empty}>No pending requests.</Text>}
         renderItem={({ item }) => (
           <View style={styles.row}>
-            <Text style={styles.name}>{item.profiles?.display_name || item.profiles?.username || 'Someone'}</Text>
+            <Text style={styles.name}>{item.profile?.display_name || item.profile?.username || 'Someone'}</Text>
             <View style={{ flexDirection: 'row', gap: 8 }}>
               <Pressable style={styles.acceptBtn} onPress={() => respond(item.id, item.requester_id, true)}>
                 <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>Accept</Text>
