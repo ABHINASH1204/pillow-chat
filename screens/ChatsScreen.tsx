@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 
 const colors = { bg: '#16110e', text1: '#f7f1ea', text2: 'rgba(247,241,234,0.56)', surface: 'rgba(255,255,255,0.06)', accent: '#e0895a' };
 
-export default function ChatsScreen() {
+export default function ChatsScreen({ navigation }: any) {
   const [conversations, setConversations] = useState<any[]>([]);
 
   const load = useCallback(async () => {
@@ -39,9 +39,9 @@ export default function ChatsScreen() {
         keyExtractor={(item) => item.id}
         ListEmptyComponent={<Text style={styles.empty}>It's quiet in here — no conversations yet.</Text>}
         renderItem={({ item }) => (
-          <View style={styles.row}>
+          <Pressable style={styles.row} onPress={() => navigation.navigate('Thread', { conversationId: item.id })}>
             <Text style={styles.rowText}>Conversation {item.id.slice(0, 8)}</Text>
-          </View>
+          </Pressable>
         )}
       />
     </View>
