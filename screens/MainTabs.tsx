@@ -6,9 +6,11 @@ import FriendsScreen from './FriendsScreen';
 import DiscoverScreen from './DiscoverScreen';
 import RequestsScreen from './RequestsScreen';
 import HomeScreen from './HomeScreen';
+import EditProfileScreen from './EditProfileScreen';
 
 const Tab = createBottomTabNavigator();
 const ChatsStack = createNativeStackNavigator();
+const MeStack = createNativeStackNavigator();
 
 function ChatsStackScreen() {
   return (
@@ -16,6 +18,15 @@ function ChatsStackScreen() {
       <ChatsStack.Screen name="ChatsList" component={ChatsScreen} />
       <ChatsStack.Screen name="Thread" component={ThreadScreen} />
     </ChatsStack.Navigator>
+  );
+}
+
+function MeStackScreen() {
+  return (
+    <MeStack.Navigator screenOptions={{ headerShown: false }}>
+      <MeStack.Screen name="MeHome" component={HomeScreen} />
+      <MeStack.Screen name="EditProfile" component={EditProfileScreen} />
+    </MeStack.Navigator>
   );
 }
 
@@ -33,7 +44,7 @@ export default function MainTabs() {
       <Tab.Screen name="Friends" component={FriendsScreen} />
       <Tab.Screen name="Discover" component={DiscoverScreen} />
       <Tab.Screen name="Requests" component={RequestsScreen} />
-      <Tab.Screen name="Me" component={HomeScreen} />
+      <Tab.Screen name="Me" component={MeStackScreen} />
     </Tab.Navigator>
   );
 }
